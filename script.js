@@ -93,9 +93,13 @@
   let selectedPlan = 'Free 15-min Consult — $0';
   document.querySelectorAll('[data-open-booking]').forEach((b) =>
     b.addEventListener('click', () => {
+      if (mobileMenu) mobileMenu.classList.remove('open');
       modal.classList.add('open');
       modal.setAttribute('aria-hidden', 'false');
       document.body.style.overflow = 'hidden';
+      // focus first option for keyboard / screen-reader users
+      const first = modal.querySelector('.opt');
+      if (first && window.innerWidth > 560) first.focus();
     })
   );
   function closeModal() {
