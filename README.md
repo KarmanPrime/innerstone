@@ -1,10 +1,26 @@
 # Innerstone Counseling
 
-Static site for Innerstone Counseling. GoDaddy cPanel publishes it as plain files for the primary domain.
+Static site for Innerstone Counseling. A push to `main` publishes the public files to GoDaddy over FTP. `.cpanel.yml` is still there if you need to deploy by hand from cPanel.
 
-## GoDaddy cPanel (Git Version Control)
+## Automatic deploy (GitHub Actions)
 
-The domain is the primary domain on the cPanel account, so the public files belong in the account’s `public_html` directory. `.cpanel.yml` copies only those files there:
+`.github/workflows/deploy.yml` runs on every push to `main`, and when you start it from the Actions tab. It uploads `index.html`, `styles.css`, `script.js`, and `images/` (including names that contain spaces) to the FTP account root with explicit FTPS on port 21. That account’s root is `public_html`, so the remote folder is `./`.
+
+It does not upload `.git*`, `.github/**`, `server.js`, `package.json`, `package-lock.json`, `README.md`, `CNAME`, `.cpanel.yml`, or `node_modules`. It does not wipe the server. Files the action did not publish, including `cgi-bin` and `.well-known`, stay where they are. The action stores `.ftp-deploy-sync-state.json` in `public_html` so the next deploy uploads only what changed. Leave that file in place.
+
+Add these three repository secrets under **Settings → Secrets and variables → Actions**:
+
+- **FTP_SERVER:** the domain (`innerstonecounseling.com`) or the cPanel server hostname
+- **FTP_USERNAME:** the full FTP user, such as `deploy@innerstonecounseling.com`
+- **FTP_PASSWORD:** that FTP account’s password
+
+Use the FTP account whose directory is `public_html`. The cPanel login itself is SSH/SFTP and will not work with this workflow.
+
+To run it again, open the **Actions** tab, select **Deploy site**, and choose **Run workflow**. To repeat a run that already happened, open that run and choose **Re-run jobs**.
+
+## Manual fallback (cPanel Git Version Control)
+
+If GitHub Actions cannot reach the server, deploy from cPanel instead. The domain is the primary domain, so the public files belong in `public_html`. `.cpanel.yml` copies only those files there:
 
 - `index.html`, `styles.css`, and `script.js`
 - the `images/` folder, including filenames that contain spaces
