@@ -33,6 +33,8 @@ jobs:
           port: 21
           server-dir: ./
           security: loose
+          # **/.git* matches names that start with .git, not .htaccess, so the
+          # HTTPS redirect file is uploaded.
           exclude: |
             **/.git*
             **/.git*/**
