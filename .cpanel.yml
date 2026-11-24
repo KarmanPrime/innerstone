@@ -1,0 +1,5 @@
+---
+deployment:
+  tasks:
+    - export DEPLOYPATH=/home/ocavxhp7k9bn/innerstone
+    - /bin/cp -R ./* "$DEPLOYPATH"
