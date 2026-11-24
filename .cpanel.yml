@@ -1,5 +1,9 @@
 ---
 deployment:
   tasks:
-    - export DEPLOYPATH=/home/ocavxhp7k9bn/innerstone
-    - /bin/cp -R ./* "$DEPLOYPATH"
+    - export DEPLOYPATH=$HOME/public_html/
+    - /bin/mkdir -p $DEPLOYPATH
+    - /bin/cp index.html $DEPLOYPATH
+    - /bin/cp styles.css $DEPLOYPATH
+    - /bin/cp script.js $DEPLOYPATH
+    - /bin/cp -R images $DEPLOYPATH
