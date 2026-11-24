@@ -77,6 +77,7 @@ a{color:inherit}
 .mobile-menu.open{display:flex}
 .mobile-menu a{text-decoration:none;padding:14px 4px;border-bottom:1px solid rgba(0,0,0,.06);font-size:1.1rem;min-height:48px;display:flex;align-items:center}
 .mobile-menu .btn{margin-top:14px;width:100%}
+.mobile-menu a.btn{padding:14px 26px;border-bottom:0;font-size:1rem;display:inline-flex}
 
 /* Hero */
 .hero{position:relative;background:linear-gradient(180deg,#f3eee6 0%,var(--ivory) 60%,#efe8dc 100%);overflow:hidden}
@@ -205,20 +206,6 @@ a{color:inherit}
 .footer-bottom{border-top:1px solid rgba(0,0,0,.08);padding:16px 28px;display:flex;justify-content:space-between;gap:12px;font-size:.82rem;color:#7a7e78;flex-wrap:wrap}
 .f-script{font-family:var(--script);font-size:1.1rem;color:var(--gold-dark)}
 
-/* Modal — mobile-first: bottom sheet on phones, centered card on desktop */
-.modal-backdrop{position:fixed;inset:0;background:rgba(48,51,47,.6);backdrop-filter:blur(6px);display:none;place-items:center;z-index:100;padding:16px;overflow-y:auto}
-.modal-backdrop.open{display:grid}
-.modal{background:var(--ivory);border-radius:20px;max-width:520px;width:100%;max-width:min(520px,100%);padding:28px 24px;position:relative;box-shadow:0 30px 80px rgba(0,0,0,.25);border:1px solid rgba(182,155,114,.4);max-height:92dvh;overflow-y:auto;margin:auto;-webkit-overflow-scrolling:touch}
-.modal-close{position:absolute;right:10px;top:8px;width:48px;height:48px;display:grid;place-items:center;background:none;border:0;font-size:2rem;cursor:pointer;color:#666;line-height:1}
-.modal h3{padding-right:40px}
-.modal-options{display:grid;gap:10px;margin:18px 0}
-.opt{text-align:left;background:#fff;border:1px solid rgba(182,155,114,.4);border-radius:14px;padding:14px;cursor:pointer;font-family:var(--sans);font-size:1rem;min-height:60px;width:100%;touch-action:manipulation}
-.opt small{display:block;color:#777;font-size:.85rem;margin-top:2px}
-.opt.selected{border-color:var(--olive);background:#eef2ea;outline:2px solid var(--sage)}
-.modal input{margin-bottom:10px}
-#bookingForm input{font-size:16px;min-height:52px;border:1px solid #d8d0c2;border-radius:12px;padding:14px;width:100%}
-#bookingForm .row-2{margin-bottom:2px}
-
 /* Reveal */
 .reveal{opacity:0;transform:translateY(18px);transition:.7s ease}
 .reveal.visible{opacity:1;transform:none}
@@ -290,9 +277,4 @@ a{color:inherit}
   .footer-grid{grid-template-columns:1fr;gap:22px}
   .footer-bottom{padding:16px;flex-direction:column}
   .palette-grid{grid-template-columns:1fr}
-  /* Booking modal becomes bottom sheet */
-  .modal-backdrop{padding:0;place-items:end center}
-  .modal{border-radius:20px 20px 0 0;max-width:100%;padding:24px 18px calc(24px + env(safe-area-inset-bottom));max-height:94dvh}
-  .modal-options{gap:12px}
-  #bookingForm .row-2{grid-template-columns:1fr}
 }

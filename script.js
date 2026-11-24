@@ -20,8 +20,12 @@
       const open = mobileMenu.classList.toggle('open');
       menuToggle.setAttribute('aria-expanded', open ? 'true' : 'false');
     });
+    // Capture phase so this still runs when SimplePractice calls stopImmediatePropagation.
     mobileMenu.querySelectorAll('a, button').forEach((el) =>
-      el.addEventListener('click', () => mobileMenu.classList.remove('open'))
+      el.addEventListener('click', () => {
+        mobileMenu.classList.remove('open');
+        menuToggle.setAttribute('aria-expanded', 'false');
+      }, true)
     );
   }
 
@@ -87,57 +91,7 @@
     });
   });
 
-  // Booking modal
-  const modal = document.getElementById('bookingModal');
-  const closeBtn = document.getElementById('modalClose');
-  let selectedPlan = 'Free 15-min Consult — $0';
-  document.querySelectorAll('[data-open-booking]').forEach((b) =>
-    b.addEventListener('click', () => {
-      if (mobileMenu) mobileMenu.classList.remove('open');
-      modal.classList.add('open');
-      modal.setAttribute('aria-hidden', 'false');
-      document.body.style.overflow = 'hidden';
-      // focus first option for keyboard / screen-reader users
-      const first = modal.querySelector('.opt');
-      if (first && window.innerWidth > 560) first.focus();
-    })
-  );
-  function closeModal() {
-    modal.classList.remove('open');
-    modal.setAttribute('aria-hidden', 'true');
-    document.body.style.overflow = '';
-  }
-  closeBtn.addEventListener('click', closeModal);
-  modal.addEventListener('click', (e) => e.target === modal && closeModal());
-  document.addEventListener('keydown', (e) => e.key === 'Escape' && closeModal());
-
-  document.querySelectorAll('.modal-options .opt').forEach((opt) => {
-    opt.addEventListener('click', () => {
-      document.querySelectorAll('.modal-options .opt').forEach((o) => o.classList.remove('selected'));
-      opt.classList.add('selected');
-      selectedPlan = opt.dataset.plan;
-    });
-  });
-  // preselect first
-  const firstOpt = document.querySelector('.modal-options .opt');
-  if (firstOpt) firstOpt.classList.add('selected');
-
-  const bookingForm = document.getElementById('bookingForm');
-  const bookingNote = document.getElementById('bookingNote');
-  bookingForm.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = document.getElementById('bName').value.trim();
-    const email = document.getElementById('bEmail').value.trim();
-    const date = document.getElementById('bDate').value;
-    if (!name || !email || !date) {
-      bookingNote.textContent = 'Please complete name, email and preferred date.';
-      return;
-    }
-    bookingNote.textContent = `Thank you, ${name.split(' ')[0]} — your request for “${selectedPlan}” on ${date} was received. Joyce will confirm shortly at ${email}.`;
-    bookingForm.reset();
-  });
-
-  // Contact form (front-end only for iteration 1)
+  // Contact form (front-end only; appointment requests go to SimplePractice)
   const contactForm = document.getElementById('contactForm');
   const formNote = document.getElementById('formNote');
   contactForm.addEventListener('submit', (e) => {
