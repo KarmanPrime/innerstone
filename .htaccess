@@ -5,3 +5,8 @@ RewriteEngine On
 RewriteCond %{HTTPS} off
 RewriteCond %{HTTP:X-Forwarded-Proto} !https [NC]
 RewriteRule ^ https://%{HTTP_HOST}%{REQUEST_URI} [L,R=301]
+
+# Old SimplePractice client-portal paths. The practice site now lives here,
+# and the portal is on joyce-baker.clientsecure.me. Same path and query string.
+# Does not match /, index.html, styles.css, script.js, or images/.
+RewriteRule ^(client-portal|appointment-request|sign-in|sign-up|documents|password|billing|users|client)(.*)$ https://joyce-baker.clientsecure.me/$1$2 [NC,R=302,L,QSA]

@@ -4,7 +4,7 @@ Static site for Innerstone Counseling. A push to `main` publishes the public fil
 
 ## Automatic deploy (GitHub Actions)
 
-`.github/workflows/deploy.yml` runs on every push to `main`, and when you start it from the Actions tab. It uploads `index.html`, `styles.css`, `script.js`, `.htaccess`, and `images/` (including names that contain spaces) to the FTP account root with explicit FTPS on port 21. `.htaccess` sends plain HTTP to HTTPS. The exclude pattern `**/.git*` does not match `.htaccess`. That account’s root is `public_html`, so the remote folder is `./`.
+`.github/workflows/deploy.yml` runs on every push to `main`, and when you start it from the Actions tab. It uploads `index.html`, `styles.css`, `script.js`, `.htaccess`, and `images/` (including names that contain spaces) to the FTP account root with explicit FTPS on port 21. `.htaccess` sends plain HTTP to HTTPS, and sends old client-portal paths such as `/sign-in` to Joyce’s SimplePractice portal. The exclude pattern `**/.git*` does not match `.htaccess`. That account’s root is `public_html`, so the remote folder is `./`.
 
 It does not upload `.git*`, `.github/**`, `server.js`, `package.json`, `package-lock.json`, `README.md`, `CNAME`, `.cpanel.yml`, or `node_modules`. It does not wipe the server. Files the action did not publish, including `cgi-bin` and `.well-known`, stay where they are. The action stores `.ftp-deploy-sync-state.json` in `public_html` so the next deploy uploads only what changed. Leave that file in place.
 
