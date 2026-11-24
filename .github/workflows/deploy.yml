@@ -1,0 +1,50 @@
+name: Deploy site
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch:
+
+# One deploy at a time. A second push waits so two runs cannot rewrite the FTP sync state together.
+concurrency:
+  group: godaddy-ftp
+  cancel-in-progress: false
+
+jobs:
+  deploy:
+    name: Deploy to GoDaddy
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v6
+
+      # Explicit FTPS on port 21. GoDaddy cPanel FTP accounts (not the cPanel SSH login) use this.
+      # security stays loose because the FTP certificate often does not match the hostname.
+      # dangerous-clean-slate is omitted on purpose. The action only removes files it published
+      # earlier, so server files such as cgi-bin and .well-known stay in place.
+      - name: Upload site over FTPS
+        uses: SamKirkland/FTP-Deploy-Action@v4.4.0
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          protocol: ftps
+          port: 21
+          server-dir: ./
+          security: loose
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/.github/**
+            .github/**
+            **/node_modules/**
+            server.js
+            package.json
+            package-lock.json
+            README.md
+            CNAME
+            .cpanel.yml
+            cgi-bin/**
+            .well-known/**
+            **/.well-known/**
