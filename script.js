@@ -7,12 +7,14 @@
   if (yearEl) yearEl.textContent = new Date().getFullYear();
 
   // Sticky header shadow
-  const onScroll = () => {
-    if (window.scrollY > 10) header.classList.add('scrolled');
-    else header.classList.remove('scrolled');
-  };
-  window.addEventListener('scroll', onScroll, { passive: true });
-  onScroll();
+  if (header) {
+    const onScroll = () => {
+      if (window.scrollY > 10) header.classList.add('scrolled');
+      else header.classList.remove('scrolled');
+    };
+    window.addEventListener('scroll', onScroll, { passive: true });
+    onScroll();
+  }
 
   // Mobile menu
   if (menuToggle && mobileMenu) {
@@ -36,9 +38,11 @@
     (entries) => {
       entries.forEach((e) => {
         if (e.isIntersecting) {
-          navLinks.forEach((l) =>
-            l.classList.toggle('active', l.getAttribute('href') === '#' + e.target.id)
-          );
+          navLinks.forEach((l) => {
+            const href = l.getAttribute('href');
+            const isAbout = e.target.id === 'about' && href === 'about.html';
+            l.classList.toggle('active', href === '#' + e.target.id || isAbout);
+          });
         }
       });
     },
@@ -60,26 +64,28 @@
   // Testimonial slider
   const quotes = document.querySelectorAll('#quoteSlider .quote');
   const dotsWrap = document.getElementById('quoteDots');
-  let qi = 0, qTimer;
-  quotes.forEach((_, i) => {
-    const d = document.createElement('button');
-    d.setAttribute('aria-label', 'Show testimonial ' + (i + 1));
-    if (i === 0) d.classList.add('active');
-    d.addEventListener('click', () => showQuote(i, true));
-    dotsWrap.appendChild(d);
-  });
-  const dots = dotsWrap.querySelectorAll('button');
-  function showQuote(i, manual) {
-    qi = (i + quotes.length) % quotes.length;
-    quotes.forEach((q, k) => q.classList.toggle('active', k === qi));
-    dots.forEach((d, k) => d.classList.toggle('active', k === qi));
-    if (manual) restartAuto();
+  if (quotes.length && dotsWrap) {
+    let qi = 0, qTimer;
+    quotes.forEach((_, i) => {
+      const d = document.createElement('button');
+      d.setAttribute('aria-label', 'Show testimonial ' + (i + 1));
+      if (i === 0) d.classList.add('active');
+      d.addEventListener('click', () => showQuote(i, true));
+      dotsWrap.appendChild(d);
+    });
+    const dots = dotsWrap.querySelectorAll('button');
+    function showQuote(i, manual) {
+      qi = (i + quotes.length) % quotes.length;
+      quotes.forEach((q, k) => q.classList.toggle('active', k === qi));
+      dots.forEach((d, k) => d.classList.toggle('active', k === qi));
+      if (manual) restartAuto();
+    }
+    function restartAuto() {
+      clearInterval(qTimer);
+      qTimer = setInterval(() => showQuote(qi + 1), 6000);
+    }
+    restartAuto();
   }
-  function restartAuto() {
-    clearInterval(qTimer);
-    qTimer = setInterval(() => showQuote(qi + 1), 6000);
-  }
-  restartAuto();
 
   // FAQ accordion
   document.querySelectorAll('#faqAccordion .acc-item').forEach((item) => {
@@ -94,7 +100,7 @@
   // Contact form (front-end only; appointment requests go to SimplePractice)
   const contactForm = document.getElementById('contactForm');
   const formNote = document.getElementById('formNote');
-  contactForm.addEventListener('submit', (e) => {
+  if (contactForm && formNote) contactForm.addEventListener('submit', (e) => {
     e.preventDefault();
     const data = new FormData(contactForm);
     const first = (data.get('firstName') || '').toString().trim();
